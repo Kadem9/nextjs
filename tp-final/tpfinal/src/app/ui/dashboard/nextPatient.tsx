@@ -16,7 +16,7 @@ function NextPatient() {
 
                 </div>
                 <div className="flex items-center pb-2 pt-6">
-                    <h3 className="ml-2 text-sm text-gray-500 ">Last 12 months</h3>
+                    <h3 className="ml-2 text-sm text-gray-500 ">Les 10 prochains</h3>
                 </div>
             </div>
         </div>
