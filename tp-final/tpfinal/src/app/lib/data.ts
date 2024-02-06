@@ -31,3 +31,25 @@ export async function fetchCardData() {
         throw new Error('Failed to fetch card data.');
     }
 }
+
+// fonction pour trouver les 10 derniers rendez-vous
+export async function fetchRendezVous() {
+    try {
+        const rendezVous = sql`
+            SELECT
+                rendezVous.id,
+                rendezVous.patient_id,
+                rendezVous.medecin_id,
+                rendezVous.amount,
+                rendezVous.status
+            FROM rendezVous
+            ORDER BY rendezVous.id DESC
+            LIMIT 10
+        `;
+
+        return (await rendezVous).rows;
+    } catch (error) {
+        console.error('Erreur:', error);
+        throw new Error('Impossible de fetch les rendez-vous.');
+    }
+}
