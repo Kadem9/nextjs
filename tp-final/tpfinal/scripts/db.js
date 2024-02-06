@@ -4,7 +4,7 @@ const {
     patients,
     rendezVous,
     medicaments,
-} = require('../src/app/lib/data');
+} = require('../src/app/lib/datadb');
 const bcrypt = require('bcrypt');
 
 async function seedMedecins(client) {
