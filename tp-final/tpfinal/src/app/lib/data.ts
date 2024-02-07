@@ -1,6 +1,7 @@
 import { sql } from '@vercel/postgres';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
+import { Medicaments, Patients, RendezVous, User } from './definition';
 
 export async function fetchCardData() {
     noStore();
@@ -41,7 +42,7 @@ export async function fetchRendezVous() {
         console.log('Fetching revenue data...');
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
-        const rendezVous = sql`
+        const rendezVous = sql<RendezVous>`
             SELECT
                 rendezVous.id,
                 rendezVous.patient_id,
@@ -66,7 +67,7 @@ export async function fetchRendezVous() {
 
 export async function fetchMedicaments() {
     try {
-        const medicaments = sql`
+        const medicaments = sql<Medicaments>`
             SELECT
                 medicaments.name,
                 medicaments.stock
@@ -79,5 +80,35 @@ export async function fetchMedicaments() {
     } catch (error) {
         console.error('Erreur:', error);
         throw new Error('Impossible de fetch les medicaments.');
+    }
+}
+
+// fonction pr retrouver les patients avc un filtre de recherche
+
+const ITEMS_PER_PAGE = 5; // nbre de patients par page
+export async function fetchFiltrePatients(
+    query: string,
+    currentPage: number,
+) {
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    noStore();
+    console.log(query, currentPage, offset)
+    try {
+        const patients = await sql<Patients>`
+            SELECT
+                patients.name,
+                patients.email,
+                patients.image_url
+            FROM patients
+            WHERE
+                patients.name LIKE ${`%${query}%`}
+            ORDER BY patients.name DESC
+            LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+        return patients.rows;
+    } catch (error) {
+        console.error('Erreur db:', error);
+        throw new Error('Impossible de fetch les patients.');
     }
 }
