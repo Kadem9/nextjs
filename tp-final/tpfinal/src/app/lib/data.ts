@@ -1,7 +1,7 @@
 import { sql } from '@vercel/postgres';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
-import { CustomerField, Medicaments, Patients, RendezVous, User } from './definition';
+import { Medicaments, PatientForm, Patients, RendezVous, User } from './definition';
 
 export async function fetchCardData() {
     noStore();
@@ -132,20 +132,29 @@ export async function fetchPatientsPages(query: string) {
     }
 }
 
-export async function fetchCustomers() {
+
+export async function fetchPatientById(id: string) {
+
+    noStore();
     try {
-        const data = await sql<CustomerField>`
+        const data = await sql<PatientForm>`
         SELECT
-          id,
-          name
-        FROM customers
-        ORDER BY name ASC
+          patients.id,
+          patients.name,
+          patients.email,
+        FROM patients
+        WHERE patients.id = ${id};
       `;
 
-        const customers = data.rows;
-        return customers;
-    } catch (err) {
-        console.error('Database Error:', err);
-        throw new Error('Failed to fetch all customers.');
+        const patient = data.rows.map((patient) => ({
+            ...patient,
+            // Convert amount from cents to dollars
+            amount: patient.amount / 100,
+        }));
+
+        return patient[0];
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch patient.');
     }
 }

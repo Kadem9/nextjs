@@ -25,7 +25,8 @@ export type RendezVous = {
     date: string;
 }
 
-export type CustomerField = {
+export type PatientForm = {
     id: string;
     name: string;
+    email: string;
 };

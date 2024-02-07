@@ -2,6 +2,7 @@ import { fetchFiltrePatients } from "@/app/lib/data";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Image from "next/image";
+import Link from "next/link";
 
 
 export default async function TablePatients({
@@ -55,7 +56,7 @@ export default async function TablePatients({
                                         </td>
                                         <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                             <div className="flex justify-end gap-3">
-                                                <FontAwesomeIcon icon={faPen} className="text-emerald-800 p-2 border-solid border-emerald-700 border-2 rounded-3xl hover:text-white hover:border-white hover:bg-emerald-800 hover:cursor-pointer" />
+                                                <UpdatePatient id={patient.id} />
                                                 <FontAwesomeIcon icon={faTrash} className="text-red-800 p-2 border-solid border-red-700 border-2 rounded-3xl hover:text-white hover:border-white hover:bg-red-800 hover:cursor-pointer" />
                                             </div>
                                         </td>
@@ -68,4 +69,15 @@ export default async function TablePatients({
             </div>
         </>
     )
+}
+
+export function UpdatePatient({ id }: { id: string }) {
+    return (
+        <Link
+            href={`/patient/${id}/edit`}
+            className="rounded-md border p-2 hover:bg-gray-100"
+        >
+            <FontAwesomeIcon icon={faPen} className="text-emerald-800 p-2 border-solid border-emerald-700 border-2 rounded-3xl hover:text-white hover:border-white hover:bg-emerald-800 hover:cursor-pointer" />
+        </Link>
+    );
 }
