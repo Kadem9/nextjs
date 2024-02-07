@@ -2,6 +2,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 
 
 export default function SearchBar({ placeholder }: { placeholder: string }) {
@@ -9,8 +10,9 @@ export default function SearchBar({ placeholder }: { placeholder: string }) {
     const pathname = usePathname();
     const { replace } = useRouter();
 
-    function handleSearch(term: string) {
+    const handleSearch = useDebouncedCallback((term) => {
         const params = new URLSearchParams(searchParams);
+        params.set('page', '1');
         if (term) {
             params.set('query', term);
         } else {
@@ -18,7 +20,8 @@ export default function SearchBar({ placeholder }: { placeholder: string }) {
         }
         replace(`${pathname}?${params.toString()}`);
 
-    }
+    }, 300);
+
     return (
         <>
             <form>

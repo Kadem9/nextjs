@@ -1,7 +1,7 @@
 import { sql } from '@vercel/postgres';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
-import { Medicaments, Patients, RendezVous, User } from './definition';
+import { CustomerField, Medicaments, Patients, RendezVous, User } from './definition';
 
 export async function fetchCardData() {
     noStore();
@@ -101,7 +101,8 @@ export async function fetchFiltrePatients(
                 patients.image_url
             FROM patients
             WHERE
-                patients.name LIKE ${`%${query}%`}
+                patients.name LIKE ${`%${query}%`} 
+                OR patients.email LIKE ${`%${query}%`}
             ORDER BY patients.name DESC
             LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
@@ -110,5 +111,41 @@ export async function fetchFiltrePatients(
     } catch (error) {
         console.error('Erreur db:', error);
         throw new Error('Impossible de fetch les patients.');
+    }
+}
+
+export async function fetchPatientsPages(query: string) {
+    noStore();
+    try {
+        const count = await sql`SELECT COUNT(*)
+      FROM patients
+      WHERE
+        patients.name LIKE ${`%${query}%`} OR
+        patients.email LIKE ${`%${query}%`}
+    `;
+
+        const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+        return totalPages;
+    } catch (error) {
+        console.error('Erreur db:', error);
+        throw new Error('Impossible de fetch les patients.');
+    }
+}
+
+export async function fetchCustomers() {
+    try {
+        const data = await sql<CustomerField>`
+        SELECT
+          id,
+          name
+        FROM customers
+        ORDER BY name ASC
+      `;
+
+        const customers = data.rows;
+        return customers;
+    } catch (err) {
+        console.error('Database Error:', err);
+        throw new Error('Failed to fetch all customers.');
     }
 }

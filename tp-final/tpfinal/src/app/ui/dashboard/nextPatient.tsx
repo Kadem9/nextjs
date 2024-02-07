@@ -1,4 +1,5 @@
 import { fetchRendezVous } from "@/app/lib/data";
+import Link from "next/link";
 
 async function NextPatient() {
 
@@ -10,7 +11,7 @@ async function NextPatient() {
                 <h2 className="text-xl md:text-2xl">
                     Les prochains patients
                 </h2>
-                <a href="#" className="btn bg-green-900 rounded p-2 ms-2 hover:bg-green-700">Ajouter</a>
+                <Link href="patient/create" className="btn bg-green-900 rounded p-2 ms-2 hover:bg-green-700">Ajouter</Link>
             </div>
 
 

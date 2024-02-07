@@ -24,3 +24,8 @@ export type RendezVous = {
     status: string;
     date: string;
 }
+
+export type CustomerField = {
+    id: string;
+    name: string;
+};
