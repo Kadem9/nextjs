@@ -1,7 +1,9 @@
+import SearchBar from "../ui/rendez-vous/searchBar";
+
 function Page() {
     return (
         <div>
-            <h1>Rendez-vous</h1>
+            <SearchBar placeholder="Medecin" />
         </div>
     )
 }
