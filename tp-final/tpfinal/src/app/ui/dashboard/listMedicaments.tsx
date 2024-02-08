@@ -21,7 +21,7 @@ async function ListMedicaments() {
                 <div className="flex flex-col p-4">
 
                     {medicaments.map((medoc) => (
-                        <div key={medoc.id} className="flex items-center justify-between py-2">
+                        <div key={medoc.name} className="flex items-center justify-between py-2">
                             <div>
 
                                 <div>
