@@ -111,6 +111,7 @@ export async function updateInvoice(
     redirect('/dashboard/invoices');
 }
 
+
 export async function deleteInvoice(id: string) {
 
     try {

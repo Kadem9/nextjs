@@ -1,3 +1,4 @@
+import { deletePatient } from "@/app/lib/actions";
 import { fetchFiltrePatients } from "@/app/lib/data";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -57,7 +58,7 @@ export default async function TablePatients({
                                         <td className="whitespace-nowrap py-3 pl-6 pr-3">
                                             <div className="flex justify-end gap-3">
                                                 <UpdatePatient id={patient.id} />
-                                                <FontAwesomeIcon icon={faTrash} className="text-red-800 p-2 border-solid border-red-700 border-2 rounded-3xl hover:text-white hover:border-white hover:bg-red-800 hover:cursor-pointer" />
+                                                <DeletePatient id={patient.id} />
                                             </div>
                                         </td>
                                     </tr>
@@ -79,5 +80,19 @@ export function UpdatePatient({ id }: { id: string }) {
         >
             <FontAwesomeIcon icon={faPen} className="text-emerald-800 p-2 border-solid border-emerald-700 border-2 rounded-3xl hover:text-white hover:border-white hover:bg-emerald-800 hover:cursor-pointer" />
         </Link>
+    );
+}
+
+
+export function DeletePatient({ id }: { id: string }) {
+    const deletePatientWithId = deletePatient.bind(null, id);
+
+    return (
+        <form action={deletePatientWithId}>
+            <button className="rounded-md border p-2 hover:bg-gray-100">
+                <span className="sr-only">Delete</span>
+                <FontAwesomeIcon icon={faTrash} className="text-red-800 p-2 border-solid border-red-700 border-2 rounded-3xl hover:text-white hover:border-white hover:bg-red-800 hover:cursor-pointer" />
+            </button>
+        </form>
     );
 }

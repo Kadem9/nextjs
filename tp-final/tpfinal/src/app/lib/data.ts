@@ -96,6 +96,7 @@ export async function fetchFiltrePatients(
     try {
         const patients = await sql<Patients>`
             SELECT
+                patients.id,
                 patients.name,
                 patients.email,
                 patients.image_url
@@ -136,20 +137,19 @@ export async function fetchPatientsPages(query: string) {
 export async function fetchPatientById(id: string) {
 
     noStore();
+    console.log(id)
     try {
         const data = await sql<PatientForm>`
         SELECT
           patients.id,
           patients.name,
-          patients.email,
+          patients.email
         FROM patients
         WHERE patients.id = ${id};
       `;
 
         const patient = data.rows.map((patient) => ({
-            ...patient,
-            // Convert amount from cents to dollars
-            amount: patient.amount / 100,
+            ...patient
         }));
 
         return patient[0];

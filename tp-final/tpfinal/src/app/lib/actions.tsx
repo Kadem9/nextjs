@@ -37,40 +37,42 @@ export async function createPatient(formData: FormData) {
 
     await sql`
     INSERT INTO patients (name, email, image_url)
-    VALUES (${name}, ${email}, '/null.png')
+    VALUES (${name}, ${email}, '/img/null.png')
   `;
 
     revalidatePath('/patient');
     redirect('/patient');
 }
 
-const UpdatePatient = FormSchema.omit({ id: true, date: true });
+const UpdatePatient = FormSchema.omit({ id: true, picture_url: true });
 
 
 export async function updatePatient(
     id: string,
-    prevState: State,
     formData: FormData,
 ) {
+    console.log('hello')
     const validatedFields = UpdatePatient.safeParse({
         name: formData.get('nameClient'),
         email: formData.get('mailClient'),
-        picture_url: formData.get('picture_url'),
     });
-
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,
-            message: 'Missing Fields. Failed to Update Invoice.',
+            message: ' Merci de remplir les champs correctement.',
         };
     }
 
-    const { name, email, picture_url } = validatedFields.data;
-
+    const { name, email } = validatedFields.data;
+    console.log(`
+    UPDATE patients
+    SET name = ${name}, email = ${email}
+    WHERE id = ${id}
+`)
     try {
         await sql`
         UPDATE patients
-        SET name = ${name}, email = ${email}, picture_url = ${status}
+        SET name = ${name}, email = ${email}
         WHERE id = ${id}
       `;
     } catch (error) {
@@ -79,4 +81,9 @@ export async function updatePatient(
 
     revalidatePath('/patient');
     redirect('/patient');
+}
+
+export async function deletePatient(id: string) {
+    await sql`DELETE FROM patients WHERE id = ${id}`;
+    revalidatePath('/patients');
 }
